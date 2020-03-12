@@ -51,14 +51,16 @@ export default function HeadTable(props: HeadTableProps, { table }) {
       style={headStyle}
       onScroll={handleBodyScrollLeft}
     >
-      <BaseTable
-        tableClassName={tableClassName}
-        hasHead
-        hasBody={false}
-        fixed={fixed}
-        columns={columns}
-        expander={expander}
-      />
+      <div className={`${prefixCls}-header-inner`}>
+        <BaseTable
+          tableClassName={tableClassName}
+          hasHead
+          hasBody={false}
+          fixed={fixed}
+          columns={columns}
+          expander={expander}
+        />
+      </div>
     </div>
   );
 }
