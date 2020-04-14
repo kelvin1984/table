@@ -74,6 +74,7 @@ declare class Table<ValueType> extends React.Component<TableProps<ValueType>, Ta
     };
     headTable: HTMLDivElement;
     bodyTable: HTMLDivElement;
+    footTable: HTMLDivElement;
     tableNode: HTMLDivElement;
     scrollPosition: ScrollPosition;
     lastScrollLeft: number;

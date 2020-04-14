@@ -138,6 +138,8 @@ class Table<ValueType> extends React.Component<TableProps<ValueType>, TableState
 
   bodyTable: HTMLDivElement;
 
+  footTable: HTMLDivElement;
+
   tableNode: HTMLDivElement;
 
   scrollPosition: ScrollPosition;
@@ -208,6 +210,9 @@ class Table<ValueType> extends React.Component<TableProps<ValueType>, TableState
     }
     if (this.bodyTable) {
       this.bodyTable.scrollLeft = 0;
+    }
+    if (this.footTable) {
+      this.footTable.scrollLeft = 0;
     }
   }
 
@@ -352,6 +357,9 @@ class Table<ValueType> extends React.Component<TableProps<ValueType>, TableState
     if (this.bodyTable) {
       this.bodyTable.scrollLeft = 0;
     }
+    if (this.footTable) {
+      this.footTable.scrollLeft = 0;
+    }
   }
 
   hasScrollX() {
@@ -366,12 +374,17 @@ class Table<ValueType> extends React.Component<TableProps<ValueType>, TableState
     }
     const target = e.target as HTMLDivElement;
     const { scroll = {} } = this.props;
-    const { headTable, bodyTable } = this;
+    const { headTable, bodyTable, footTable } = this;
     if (target.scrollLeft !== this.lastScrollLeft && scroll.x) {
-      if (target === bodyTable && headTable) {
-        headTable.scrollLeft = target.scrollLeft;
-      } else if (target === headTable && bodyTable) {
-        bodyTable.scrollLeft = target.scrollLeft;
+      if (target === bodyTable) {
+        if (headTable) headTable.scrollLeft = target.scrollLeft;
+        if (footTable) footTable.scrollLeft = target.scrollLeft;
+      } else if (target === headTable) {
+        if (bodyTable) bodyTable.scrollLeft = target.scrollLeft;
+        if (footTable) footTable.scrollLeft = target.scrollLeft;
+      } else if (target === footTable) {
+        if (headTable) footTable.scrollLeft = target.scrollLeft;
+        if (bodyTable) bodyTable.scrollLeft = target.scrollLeft;
       }
       this.setScrollPositionClassName();
     }
@@ -386,8 +399,13 @@ class Table<ValueType> extends React.Component<TableProps<ValueType>, TableState
       return;
     }
     const { scroll = {} } = this.props;
-    const { headTable, bodyTable, fixedColumnsBodyLeft, fixedColumnsBodyRight } = this;
-    if (target.scrollTop !== this.lastScrollTop && scroll.y && target !== headTable) {
+    const { headTable, bodyTable, footTable, fixedColumnsBodyLeft, fixedColumnsBodyRight } = this;
+    if (
+      target.scrollTop !== this.lastScrollTop &&
+      scroll.y &&
+      target !== headTable &&
+      target !== footTable
+    ) {
       const { scrollTop } = target;
       if (fixedColumnsBodyLeft && target !== fixedColumnsBodyLeft) {
         fixedColumnsBodyLeft.scrollTop = scrollTop;
@@ -531,7 +549,12 @@ class Table<ValueType> extends React.Component<TableProps<ValueType>, TableState
   renderFooter() {
     const { footer, prefixCls } = this.props;
     return footer ? (
-      <div className={`${prefixCls}-footer`} key="footer">
+      <div
+        className={`${prefixCls}-footer`}
+        key="footer"
+        ref={this.saveRef('footTable')}
+        onScroll={this.handleBodyScrollLeft}
+      >
         {footer(this.props.data)}
       </div>
     ) : null;

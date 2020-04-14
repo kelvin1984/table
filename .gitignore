@@ -21,12 +21,8 @@ Thumbs.db
 .build
 node_modules
 .cache
-dist
-assets/**/*.css
 build
-lib
 coverage
 yarn.lock
-es/
 .storybook
 .doc

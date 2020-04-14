@@ -107,13 +107,19 @@ var Table = /*#__PURE__*/function (_React$Component) {
 
       var _assertThisInitialize = _assertThisInitialized(_this),
           headTable = _assertThisInitialize.headTable,
-          bodyTable = _assertThisInitialize.bodyTable;
+          bodyTable = _assertThisInitialize.bodyTable,
+          footTable = _assertThisInitialize.footTable;
 
       if (target.scrollLeft !== _this.lastScrollLeft && scroll.x) {
-        if (target === bodyTable && headTable) {
-          headTable.scrollLeft = target.scrollLeft;
-        } else if (target === headTable && bodyTable) {
-          bodyTable.scrollLeft = target.scrollLeft;
+        if (target === bodyTable) {
+          if (headTable) headTable.scrollLeft = target.scrollLeft;
+          if (footTable) footTable.scrollLeft = target.scrollLeft;
+        } else if (target === headTable) {
+          if (bodyTable) bodyTable.scrollLeft = target.scrollLeft;
+          if (footTable) footTable.scrollLeft = target.scrollLeft;
+        } else if (target === footTable) {
+          if (headTable) footTable.scrollLeft = target.scrollLeft;
+          if (bodyTable) bodyTable.scrollLeft = target.scrollLeft;
         }
 
         _this.setScrollPositionClassName();
@@ -136,10 +142,11 @@ var Table = /*#__PURE__*/function (_React$Component) {
       var _assertThisInitialize2 = _assertThisInitialized(_this),
           headTable = _assertThisInitialize2.headTable,
           bodyTable = _assertThisInitialize2.bodyTable,
+          footTable = _assertThisInitialize2.footTable,
           fixedColumnsBodyLeft = _assertThisInitialize2.fixedColumnsBodyLeft,
           fixedColumnsBodyRight = _assertThisInitialize2.fixedColumnsBodyRight;
 
-      if (target.scrollTop !== _this.lastScrollTop && scroll.y && target !== headTable) {
+      if (target.scrollTop !== _this.lastScrollTop && scroll.y && target !== headTable && target !== footTable) {
         var scrollTop = target.scrollTop;
 
         if (fixedColumnsBodyLeft && target !== fixedColumnsBodyLeft) {
@@ -268,6 +275,10 @@ var Table = /*#__PURE__*/function (_React$Component) {
       if (this.bodyTable) {
         this.bodyTable.scrollLeft = 0;
       }
+
+      if (this.footTable) {
+        this.footTable.scrollLeft = 0;
+      }
     }
   }, {
     key: "componentDidUpdate",
@@ -374,6 +385,10 @@ var Table = /*#__PURE__*/function (_React$Component) {
       if (this.bodyTable) {
         this.bodyTable.scrollLeft = 0;
       }
+
+      if (this.footTable) {
+        this.footTable.scrollLeft = 0;
+      }
     }
   }, {
     key: "hasScrollX",
@@ -471,7 +486,9 @@ var Table = /*#__PURE__*/function (_React$Component) {
           prefixCls = _this$props5.prefixCls;
       return footer ? React.createElement("div", {
         className: "".concat(prefixCls, "-footer"),
-        key: "footer"
+        key: "footer",
+        ref: this.saveRef('footTable'),
+        onScroll: this.handleBodyScrollLeft
       }, footer(this.props.data)) : null;
     }
   }, {
